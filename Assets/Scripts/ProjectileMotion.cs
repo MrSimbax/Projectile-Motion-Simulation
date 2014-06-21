@@ -68,8 +68,8 @@ public class ProjectileMotion : MonoBehaviour {
 	public float initialVelocity {
 		get { return _initialVelocity; }
 		set {
-			if (value < 0.0f || value > 100.0f) { return; }
-			if (!_isRunning) {
+			if (value < 0.0f) { return; }
+			if (!_hasStarted) {
 				_initialVelocity = _velocity = value;
 				reset();
 			}
@@ -84,7 +84,7 @@ public class ProjectileMotion : MonoBehaviour {
 		get { return _launchAngle; }
 		set {
 			if (value < 0.0f || value > 90.0f) { return; }
-			if (!_isRunning) {
+			if (!_hasStarted) {
 				_launchAngle = _angle = value;
 				_radAngle = value * Mathf.Deg2Rad;
 				reset();
@@ -99,8 +99,8 @@ public class ProjectileMotion : MonoBehaviour {
 	public float gravityAcceleration {
 		get { return _gravityAcceleration; }
 		set {
-			if (value < 0.0f || value > 10.0f) { return; }
-			if (!_isRunning) {
+			if (value < 0.0f) { return; }
+			if (!_hasStarted) {
 				_gravityAcceleration = value;
 			}
 		}
@@ -113,8 +113,8 @@ public class ProjectileMotion : MonoBehaviour {
 	public float simulationSpeed {
 		get { return _simulationSpeed; }
 		set {
-			if (value <= 0.0f || value > 8.0f) { return; }
-			if (!_isRunning) {
+			if (value <= 0.0f) { return; }
+			if (!_hasStarted) {
 				_simulationSpeed = value;
 				reset();
 			}
@@ -128,7 +128,7 @@ public class ProjectileMotion : MonoBehaviour {
 	public float height {
 		get { return _height; }
 		set {
-			if (value < 0.0f || value > 100.0f) { return; }
+			if (value < 0.0f) { return; }
 
 			// if part of the ball is below ground
 			if (value <= transform.localScale.y / 2.0f) {
@@ -137,7 +137,7 @@ public class ProjectileMotion : MonoBehaviour {
 				ballBase.renderer.enabled = true; // show it otherwise
 			}
 
-			if (!_isRunning) {
+			if (!_hasStarted) {
 				reset(); // put ball on the base
 
 				// Set the ball base

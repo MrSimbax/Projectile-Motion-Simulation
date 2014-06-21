@@ -158,37 +158,32 @@ public class SimulationGUI : MonoBehaviour {
 
 		// Initial velocity
 		GUILayout.BeginHorizontal();
-		newValue = doHorizontalSlider("Initial Velocity [m/s]", _initialVelocity, 0.0f, 100.0f, _initialVelocityString);
+		newValue = doHorizontalSlider("Initial Velocity [m/s]", _initialVelocity, 0.0f, 100.0f, ref _initialVelocityString);
 		_initialVelocity = projectileMotion.initialVelocity = newValue;
-		_initialVelocityString = Utilities.Round(projectileMotion.initialVelocity);
 		GUILayout.EndHorizontal();
 
 		// Launch angle
 		GUILayout.BeginHorizontal();
-		newValue = doHorizontalSlider("Launch Angle [degrees]", _launchAngle, 0.0f, 90.0f, _launchAngleString);
+		newValue = doHorizontalSlider("Launch Angle [degrees]", _launchAngle, 0.0f, 90.0f, ref _launchAngleString);
 		_launchAngle = projectileMotion.launchAngle = newValue;
-		_launchAngleString = Utilities.Round(projectileMotion.launchAngle);
 		GUILayout.EndHorizontal();
 
 		// Gravity Acceleration
 		GUILayout.BeginHorizontal();
-		newValue = doHorizontalSlider("Gravity Acceleration [m/s^2]", _gravityAcceleration, 0.0f, 10.0f, _gravityAccelerationString);
+		newValue = doHorizontalSlider("Gravity Acceleration [m/s^2]", _gravityAcceleration, 0.0f, 10.0f, ref _gravityAccelerationString);
 		_gravityAcceleration = projectileMotion.gravityAcceleration = newValue;
-		_gravityAccelerationString = Utilities.Round(projectileMotion.gravityAcceleration);
 		GUILayout.EndHorizontal();
 
 		// Simulation Speed
 		GUILayout.BeginHorizontal();
-		newValue = doHorizontalSlider("Simulation Speed (fraction)", _simulationSpeed, 0.25f, 8.0f, _simulationSpeedString);
+		newValue = doHorizontalSlider("Simulation Speed (fraction)", _simulationSpeed, 0.25f, 8.0f, ref _simulationSpeedString);
 		_simulationSpeed = projectileMotion.simulationSpeed = newValue;
-		_simulationSpeedString = Utilities.Round(projectileMotion.simulationSpeed);
 		GUILayout.EndHorizontal();
 
 		// Height
 		GUILayout.BeginHorizontal();
-		newValue = doHorizontalSlider("Height [m]", _height, 0.0f, 100.0f, _heightString);
+		newValue = doHorizontalSlider("Height [m]", _height, 0.0f, 100.0f, ref _heightString);
 		_height = projectileMotion.height = newValue;
-		_heightString = Utilities.Round(projectileMotion.height);
 		GUILayout.EndHorizontal();
 
 		// Checkboxes
@@ -231,7 +226,7 @@ public class SimulationGUI : MonoBehaviour {
 		GUILayout.EndArea();
 	}
 
-	private float doHorizontalSlider(string name, float value, float min, float max, string valueString) {
+	private float doHorizontalSlider(string name, float value, float min, float max, ref string valueString) {
 		float newValue;
 		float finalValue = value;
 
@@ -239,8 +234,14 @@ public class SimulationGUI : MonoBehaviour {
 		newValue = GUILayout.HorizontalSlider(value, min, max);
 		valueString = GUILayout.TextField(valueString, 6, GUILayout.Width(_valuesTextFieldsWidth));
 
-		if (newValue != value || valueString != value.ToString() && Event.current.keyCode == KeyCode.Return && float.TryParse(valueString, out newValue)) {
+		if (projectileMotion.hasStarted) { valueString = Utilities.Round(value); return value; } // ignore new value if simulation has already started
+
+		if (newValue != value ||
+		    	valueString != Utilities.Round(value) && Event.current.keyCode == KeyCode.Return && float.TryParse(valueString, out newValue)) {
+			if (newValue < min) { valueString = Utilities.Round(min); return finalValue; }
+			if (newValue > max) { valueString = Utilities.Round(max); return finalValue; }
 			finalValue = newValue;
+			valueString = Utilities.Round(finalValue);
 		}
 
 		return finalValue;
