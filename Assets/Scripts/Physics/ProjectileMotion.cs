@@ -192,6 +192,15 @@ public class ProjectileMotion : MonoBehaviour {
 		}
 	}
 
+	// Physics interval
+	// seconds
+	// calculated (based on Time.fixedDeltaTime and simulationSpeed)
+	public float deltaTime {
+		get {
+			return _deltaTime;
+		}
+	}
+
 	// Theoretical range calculated from the formula
 	// meters
 	// calculated once
@@ -231,46 +240,50 @@ public class ProjectileMotion : MonoBehaviour {
 	// ------------
 
 	// Initial values:
-	private float _initialVelocity;
-	private float _gravityAcceleration;
-	private float _launchAngle;
-	private float _simulationSpeed;
-	private float _height;
+	protected float _initialVelocity;
+	protected float _gravityAcceleration;
+	protected float _launchAngle;
+	protected float _simulationSpeed;
+	protected float _height;
 
 	// Calculated values:
-	private float _velocity;
-	private float _horizontalVelocity;
-	private float _verticalVelocity;
-	private float _radLaunchAngle;
-	private float _angle;
-	private float _time;
-	private float _xPos;
-	private float _yPos;
-	private float _zPos;
-	private float _maxHeight;
-	private float _timeWhenReachedMaxHeight;
+	protected float _velocity;
+	protected float _horizontalVelocity;
+	protected float _verticalVelocity;
+	protected float _radLaunchAngle;
+	protected float _angle;
+	protected float _time;
+	protected float _deltaTime;
+	protected float _xPos;
+	protected float _yPos;
+	protected float _zPos;
+	protected float _maxHeight;
+	protected float _timeWhenReachedMaxHeight;
 
 	// Helpful values:
-	private float _radAngle;
-	private float _initialXPos;
-	private float _initialYPos;
-	private float _initialZPos;
-	private TrailRenderer _trajectoryRenderer;
-	private bool _hasStarted;
-	private bool _isRunning;
-	private bool _isDone;
-	private bool _isTrailOn;
-	private bool _isPrevTrailOn; // for performance reasons
-	private bool _isTrajectoryShowed;
+	protected float _radAngle;
+	protected float _initialXPos;
+	protected float _initialYPos;
+	protected float _initialZPos;
+	protected TrailRenderer _trajectoryRenderer;
+	protected bool _hasStarted;
+	protected bool _isRunning;
+	protected bool _isDone;
+	protected bool _isTrailOn;
+	protected bool _isPrevTrailOn; // for performance reasons
+	protected bool _isTrajectoryShowed;
 
 	// Methods
 	// -------
 
+	private void setNotMovingCatapultWithBall() {
+		catapult.transform.parent = projectileTransform.parent;
+	}
+
 	// Starts simulation
 	public void start() {
 		if (!_hasStarted) {
-			// Don't move the catapult
-			catapult.transform.parent = projectileTransform.parent;
+			setNotMovingCatapultWithBall();
 
 			catAnimController.throw_();
 
@@ -311,6 +324,7 @@ public class ProjectileMotion : MonoBehaviour {
 
 	private void resetTime() {
 		_time = 0.0f;
+		_deltaTime = Time.fixedDeltaTime * simulationSpeed;
 	}
 
 	private void resetVelocity() {
@@ -351,7 +365,7 @@ public class ProjectileMotion : MonoBehaviour {
 	}
 
 	// Change the initial values to the default ones
-	public void setDefaultSettings() {
+	public virtual void setDefaultSettings() {
 		if (_isRunning) { return; }
 		_initialVelocity = 50.0f;
 		_gravityAcceleration = 9.81f;
@@ -420,14 +434,15 @@ public class ProjectileMotion : MonoBehaviour {
 	}
 
 	private void calculateNextPosition() {
-		_xPos += _horizontalVelocity * Time.fixedDeltaTime;
-		_yPos += _verticalVelocity * Time.fixedDeltaTime;
+		_xPos += _horizontalVelocity * _deltaTime;
+		_yPos += _verticalVelocity * _deltaTime;
 		_zPos += 0;
 	}
 
-	private void calculateCurrentVelocity() {
+	protected virtual void calculateCurrentVelocity() {
+		Debug.Log("without air drag");
 		_horizontalVelocity += 0;
-		_verticalVelocity += - _gravityAcceleration * Time.fixedDeltaTime;
+		_verticalVelocity += - _gravityAcceleration * _deltaTime;
 		_velocity = Mathf.Sqrt(Mathf.Pow(_horizontalVelocity, 2.0f) + Mathf.Pow(_verticalVelocity, 2.0f));
 	}
 
@@ -461,7 +476,7 @@ public class ProjectileMotion : MonoBehaviour {
 
 	private void updateTime() {
 		if (!_isDone) {
-			_time += Time.fixedDeltaTime * simulationSpeed;
+			_time += _deltaTime;
 		}
 	}
 

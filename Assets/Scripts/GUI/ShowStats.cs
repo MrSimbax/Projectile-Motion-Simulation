@@ -23,7 +23,7 @@ public class ShowStats : MonoBehaviour {
 	void Update () {
 		guiText.text =
 			"Current Time: " + Utilities.Round(projectileMotion.time) + " seconds\n" +
-			"Delta Time: " + Utilities.Round(Time.fixedDeltaTime) + " seconds\n" +
+			"Delta Time: " + Utilities.Round(projectileMotion.deltaTime) + " seconds\n" +
 			"Current X Position: " + Utilities.Round(projectileMotion.ball.transform.localPosition.x) + " meters\n" +
 			"Current Y Position: " + Utilities.Round(projectileMotion.ball.transform.localPosition.y) + " meters\n" +
 			"Current Velocity: " +  Utilities.Round(projectileMotion.velocity) + " meters / seconds\n" +
