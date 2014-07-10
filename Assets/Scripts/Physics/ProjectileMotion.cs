@@ -24,7 +24,7 @@ public class ProjectileMotion : MonoBehaviour {
 	// Used from the outside:
 	// ----------------------
 
-	// Object to which this script is attached
+	// Object which this script is attached to
 	public GameObject ball {
 		get { return gameObject; }
 	}
@@ -294,35 +294,60 @@ public class ProjectileMotion : MonoBehaviour {
 		}
 	}
 
-	// Stops and resets the simulation
-	public void reset() {
-		// Back to the initial position
-		gameObject.transform.localPosition = new Vector3(_initialXPos, _initialYPos, _initialZPos);
+	private void backToInitialPosition() {
+		_xPos = _initialXPos;
+		_yPos = _initialYPos;
+		_zPos = _initialZPos;
+		gameObject.transform.localPosition = new Vector3(_xPos, _yPos, _zPos);
+	}
 
-		// Move catapult with the ball
+	private void setMovingCatapultWithBall() {
 		catapult.transform.parent = ball.transform;
+	}
 
-		// Reset the catapult
+	private void resetCatapult() {
 		catAnimController.reset();
+	}
 
-		// Reset the variables
+	private void resetTime() {
 		_time = 0.0f;
+	}
 
+	private void resetVelocity() {
 		_velocity = _initialVelocity;
 		_horizontalVelocity = _initialVelocity * Mathf.Cos(_radLaunchAngle);
 		_verticalVelocity = _initialVelocity * Mathf.Sin(_radLaunchAngle);
+	}
 
+	private void resetAngle() {
 		_angle = _launchAngle;
 		_radAngle = _radLaunchAngle;
+	}
 
+	private void resetMaxHeight() {
 		_maxHeight = 0.0f;
 		_timeWhenReachedMaxHeight = 0.0f;
+	}
 
-		// Reset the control variables
+	private void resetSimulation() {
 		_isDone = false;
 		_isRunning = false;
 		_hasStarted = false;
 		_isTrailOn = false;
+	}
+
+	// Stops and resets the simulation
+	public void reset() {
+		backToInitialPosition();
+		setMovingCatapultWithBall();
+		resetCatapult();
+
+		resetTime();
+		resetAngle();
+		resetVelocity();
+		resetMaxHeight();
+
+		resetSimulation();
 	}
 
 	// Change the initial values to the default ones
@@ -339,30 +364,37 @@ public class ProjectileMotion : MonoBehaviour {
 
 	// Behaviour
 	// ---------
-	public void Start() {
-		// Setup animation
+	private void setupAnimation() {
 		catAnimController.stretch();
+	}
 
-		// Init variables
+	private void initPosition() {
 		_initialXPos = gameObject.transform.localPosition.x;
 		_initialYPos = gameObject.transform.localPosition.y;
 		_initialZPos = gameObject.transform.localPosition.z;
+	}
 
-		setDefaultSettings();
-
-		// Setup simulation
+	private void setupSimulation() {
 		_isDone = false;
 		_isRunning = false;
+	}
 
-		// Setup trail renderer
+	private void setupTrailRenderer() {
 		_trajectoryRenderer = GetComponent<TrailRenderer>();
 		_isTrailOn = false;
 		_isPrevTrailOn = false;
 		_isTrajectoryShowed = false;
 	}
-	
-	public void Update() {
-		// Trajectory
+
+	public void Start() {
+		setupAnimation();
+		initPosition();
+		setDefaultSettings();
+		setupSimulation();
+		setupTrailRenderer();
+	}
+
+	private void renderTrajectory() {
 		// If simulation haven't started yet, then don't render
 		if (_isTrailOn != _isPrevTrailOn) {
 			if (_isTrailOn) {
@@ -383,45 +415,69 @@ public class ProjectileMotion : MonoBehaviour {
 		}
 	}
 
-	public void FixedUpdate() {
-		// All physics is here
+	public void Update() {
+		renderTrajectory();
+	}
 
-		if (!_isRunning) { return; } // don't do anything if simulation's not running
+	private void calculateNextPosition() {
+		_xPos += _horizontalVelocity * Time.fixedDeltaTime;
+		_yPos += _verticalVelocity * Time.fixedDeltaTime;
+		_zPos += 0;
+	}
 
-		// Calculate the next position of the ball
-		_xPos = _initialXPos + _initialVelocity * Mathf.Cos(_radLaunchAngle) * _time;
-		_yPos = _initialYPos + _initialVelocity * Mathf.Sin(_radLaunchAngle) * _time - _gravityAcceleration * Mathf.Pow(_time, 2.0f) / 2.0f;
-		_zPos = _initialZPos;
-
-		// Calculate current velocity for the user
-		_horizontalVelocity = _horizontalVelocity * 1.0f;
-		_verticalVelocity = _initialVelocity * Mathf.Sin(_radLaunchAngle) - _gravityAcceleration * _time;
+	private void calculateCurrentVelocity() {
+		_horizontalVelocity += 0;
+		_verticalVelocity += - _gravityAcceleration * Time.fixedDeltaTime;
 		_velocity = Mathf.Sqrt(Mathf.Pow(_horizontalVelocity, 2.0f) + Mathf.Pow(_verticalVelocity, 2.0f));
+	}
 
-		// Calculate current angle for the user
+	private void calculateCurrentAngle() {
 		if (!Utilities.isZero(_horizontalVelocity)) {
 			_angle = Mathf.Atan(_verticalVelocity / _horizontalVelocity) * Mathf.Rad2Deg;
 		} else {
 			if (_horizontalVelocity < 0.0f) { _angle = -90.0f; }
 			else { _angle = 90.0f; }
 		}
+	}
 
-		// Calculate max height for the user
+	private void calculateMaxHeight() {
 		if (_yPos > _maxHeight) {
 			_maxHeight = _yPos;
 			_timeWhenReachedMaxHeight = _time;
 		}
+	}
 
-		// Change the position of the ball
+	private void changePosition() {
 		if (!_isDone) {
 			gameObject.transform.localPosition = new Vector3(_xPos, _yPos, _zPos);
-			_time += Time.fixedDeltaTime * simulationSpeed;
-
+			
 			// If the ball reached the ground
 			if (_yPos < 0.0f) {
 				_isDone = true;
 				_isRunning = false;
 			}
 		}
+	}
+
+	private void updateTime() {
+		if (!_isDone) {
+			_time += Time.fixedDeltaTime * simulationSpeed;
+		}
+	}
+
+	public void FixedUpdate() {
+		// All physics is here
+		if (!_isRunning) { return; } // don't do anything if simulation's not running
+
+		// Physics
+		calculateCurrentVelocity();
+		calculateNextPosition();
+
+		// Info for user
+		calculateCurrentAngle();
+		calculateMaxHeight();
+
+		changePosition();
+		updateTime();
 	}
 }
