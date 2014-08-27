@@ -74,8 +74,8 @@ public class CameraController : MonoBehaviour {
             // * velocity
             // * max height
             _z = - Mathf.Max(_range * 1 / Mathf.Tan(60*Mathf.Deg2Rad),
-                             projectileMotion.initialVelocity * 4 / Mathf.Tan(60*Mathf.Deg2Rad),
-                             projectileMotion.theoreticalMaxHeight * 4 / Mathf.Tan(60*Mathf.Deg2Rad));
+                        projectileMotion.initialVelocity * 4 / Mathf.Tan(60*Mathf.Deg2Rad),
+                        projectileMotion.theoreticalMaxHeight * 4 / Mathf.Tan(60*Mathf.Deg2Rad));
             
             gameObject.transform.localPosition = new Vector3(_x, _y, _z);
         }

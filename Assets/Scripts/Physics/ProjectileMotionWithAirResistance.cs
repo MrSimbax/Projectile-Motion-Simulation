@@ -49,7 +49,8 @@ public class ProjectileMotionWithAirResistance : ProjectileMotion {
     private float _airDragForce;
 
     private void calculateAirDragForce(float velocity) {
-        _airDragForce = 0.5f * _densityOfAir * _crossSectionalArea * _dragCoefficient * Mathf.Pow(velocity, 2.0f);
+        _airDragForce = 0.5f * _densityOfAir * _crossSectionalArea * _dragCoefficient *
+                        Mathf.Pow(velocity, 2.0f);
         if (velocity < 0.0f) _airDragForce *= -1.0f;
     }
 
@@ -60,7 +61,9 @@ public class ProjectileMotionWithAirResistance : ProjectileMotion {
         calculateAirDragForce(_verticalVelocity);
         _verticalVelocity += - (_gravityAcceleration + (_airDragForce / _mass)) * _deltaTime;
 
-        _velocity = Mathf.Sqrt(Mathf.Pow(_horizontalVelocity, 2.0f) + Mathf.Pow(_verticalVelocity, 2.0f));
+        _velocity = Mathf.Sqrt(
+                        Mathf.Pow(_horizontalVelocity, 2.0f) + Mathf.Pow(_verticalVelocity, 2.0f)
+                    );
         calculateAirDragForce(_velocity);
     }
 

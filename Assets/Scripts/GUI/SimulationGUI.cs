@@ -94,13 +94,15 @@ public class SimulationGUI : MonoBehaviour {
         _controlsWindowWidth = Screen.width;
         _controlsWindowLeft = 0;
         _controlsWindowTop = Screen.height - _controlsWindowHeight;
-        _controlsWindowRect = new Rect(_controlsWindowLeft, _controlsWindowTop, _controlsWindowWidth, _controlsWindowHeight);
+        _controlsWindowRect = new Rect(_controlsWindowLeft, _controlsWindowTop,
+                                       _controlsWindowWidth, _controlsWindowHeight);
 
         _valuesWindowHeight = 200;
         _valuesWindowWidth = Screen.width / 2;
         _valuesWindowLeft = Screen.width / 2;
         _valuesWindowTop = 0;
-        _valuesWindowRect = new Rect(_valuesWindowLeft, _valuesWindowTop, _valuesWindowWidth, _valuesWindowHeight);
+        _valuesWindowRect = new Rect(_valuesWindowLeft, _valuesWindowTop,
+                                     _valuesWindowWidth, _valuesWindowHeight);
 
         _initialVelocityString = Utilities.Round(projectileMotion.initialVelocity);
         _launchAngleString = Utilities.Round(projectileMotion.launchAngle);
@@ -115,14 +117,16 @@ public class SimulationGUI : MonoBehaviour {
         _aboutWindowWidth = 300;
         _aboutWindowLeft = (Screen.width - _aboutWindowWidth) / 2;
         _aboutWindowTop = (Screen.height - _aboutWindowHeight) / 2;
-        _aboutWindowRect = new Rect(_aboutWindowLeft, _aboutWindowTop, _aboutWindowWidth, _aboutWindowHeight);
+        _aboutWindowRect = new Rect(_aboutWindowLeft, _aboutWindowTop,
+                                    _aboutWindowWidth, _aboutWindowHeight);
 
          _boxesWidth = 200;
     }
 
     public void OnGUI() {
         _controlsWindowRect = GUI.Window(0, _controlsWindowRect, doControlsWindow, "Controls");
-        _valuesWindowRect = GUI.Window(1, _valuesWindowRect, doValuesWindow, "Values (can't be changed during simulation)");
+        _valuesWindowRect = GUI.Window(1, _valuesWindowRect, doValuesWindow,
+                                       "Values (can't be changed during simulation)");
         if (_isAboutWindowShowed) {
             _aboutWindowRect = GUI.Window(2, _aboutWindowRect, doAboutWindow, "About");
         }
@@ -142,10 +146,21 @@ public class SimulationGUI : MonoBehaviour {
                 _pauseButtonString = "Pause";
             }
         }
-        if (GUILayout.Button("Reset")) { projectileMotion.reset(); _pauseButtonString = "Pause"; }
-        if (GUILayout.Button("Default")) { projectileMotion.setDefaultSettings(); _pauseButtonString = "Pause"; Start(); }
-        if (GUILayout.Button("About")) { _isAboutWindowShowed = !_isAboutWindowShowed; }
-        if (GUILayout.Button("Quit")) { Application.Quit(); }
+        if (GUILayout.Button("Reset")) {
+            projectileMotion.reset();
+            _pauseButtonString = "Pause";
+        }
+        if (GUILayout.Button("Default")) {
+            projectileMotion.setDefaultSettings();
+            _pauseButtonString = "Pause";
+            Start();
+        }
+        if (GUILayout.Button("About")) {
+            _isAboutWindowShowed = !_isAboutWindowShowed;
+        }
+        if (GUILayout.Button("Quit")) {
+            Application.Quit();
+        }
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
     }
@@ -158,25 +173,29 @@ public class SimulationGUI : MonoBehaviour {
 
         // Initial velocity
         GUILayout.BeginHorizontal();
-        newValue = doHorizontalSlider("Initial Velocity [m/s]", _initialVelocity, 0.0f, 100.0f, ref _initialVelocityString);
+        newValue = doHorizontalSlider("Initial Velocity [m/s]", _initialVelocity,
+                                      0.0f, 100.0f, ref _initialVelocityString);
         _initialVelocity = projectileMotion.initialVelocity = newValue;
         GUILayout.EndHorizontal();
 
         // Launch angle
         GUILayout.BeginHorizontal();
-        newValue = doHorizontalSlider("Launch Angle [degrees]", _launchAngle, 0.0f, 90.0f, ref _launchAngleString);
+        newValue = doHorizontalSlider("Launch Angle [degrees]", _launchAngle,
+                                      0.0f, 90.0f, ref _launchAngleString);
         _launchAngle = projectileMotion.launchAngle = newValue;
         GUILayout.EndHorizontal();
 
         // Gravity Acceleration
         GUILayout.BeginHorizontal();
-        newValue = doHorizontalSlider("Gravity Acceleration [m/s^2]", _gravityAcceleration, 0.0f, 10.0f, ref _gravityAccelerationString);
+        newValue = doHorizontalSlider("Gravity Acceleration [m/s^2]", _gravityAcceleration,
+                                      0.0f, 10.0f, ref _gravityAccelerationString);
         _gravityAcceleration = projectileMotion.gravityAcceleration = newValue;
         GUILayout.EndHorizontal();
 
         // Simulation Speed
         GUILayout.BeginHorizontal();
-        newValue = doHorizontalSlider("Simulation Speed (fraction)", _simulationSpeed, 0.25f, 8.0f, ref _simulationSpeedString);
+        newValue = doHorizontalSlider("Simulation Speed (fraction)", _simulationSpeed,
+                                      0.25f, 8.0f, ref _simulationSpeedString);
         _simulationSpeed = projectileMotion.simulationSpeed = newValue;
         GUILayout.EndHorizontal();
 
@@ -189,7 +208,8 @@ public class SimulationGUI : MonoBehaviour {
         // Checkboxes
         GUILayout.BeginHorizontal();
         _isBallCameraEnabled = GUILayout.Toggle(_isBallCameraEnabled, "Camera on point");
-        _isAirResistance = GUILayout.Toggle(_isAirResistance, "Air resistance (not implemented yet)");
+        _isAirResistance = GUILayout.Toggle(_isAirResistance,
+                                            "Air resistance (not implemented yet)");
         _isTrajectoryShowed = GUILayout.Toggle(_isTrajectoryShowed, "Show trajectory");
         if (_isBallCameraEnabled != cameraController.isBallCamEnabled) {
             cameraController.switchCamera();
@@ -215,18 +235,24 @@ public class SimulationGUI : MonoBehaviour {
         GUILayout.BeginVertical();
         GUILayout.Label("Projectile Motion Simulation\n\n" +
                         "Authors:\nProgrammer - Mateusz Przybył\nDesigner - Piotr Klemczak\n\n" +
-                        "Runs on Unity3D engine (Free version), 3D models were made in Blender and are on CC BY-NC 3.0 license.\n\n" +
-                        "Unity project and source code are on GPLv3 license and will be available on github.com/mrsimbax/projectilemotionunity\n\n" +
-                        "This software is part of the educational project for school I Liceum Ogólnokształcące w Lesznie.");
+                        
+                        "Runs on Unity3D engine (Free version), 3D models were made in Blender and"
+                        "are on CC BY-NC 3.0 license.\n\n" +
+                        
+                        "Unity project and source code are on GPLv3 license and will be available"
+                        "on github.com/mrsimbax/projectilemotionunity\n\n" +
+
+                        "This software is part of the educational project for school I Liceum"
+                        "Ogólnokształcące w Lesznie.");
         if (GUILayout.Button("OK")) {
             _isAboutWindowShowed = false;
         }
-
         GUILayout.EndVertical();
         GUILayout.EndArea();
     }
 
-    private float doHorizontalSlider(string name, float value, float min, float max, ref string valueString) {
+    private float doHorizontalSlider(string name, float value,
+                                     float min, float max, ref string valueString) {
         float newValue;
         float finalValue = value;
 
@@ -234,14 +260,20 @@ public class SimulationGUI : MonoBehaviour {
         newValue = GUILayout.HorizontalSlider(value, min, max);
         valueString = GUILayout.TextField(valueString, 6, GUILayout.Width(_valuesTextFieldsWidth));
 
-        if (projectileMotion.hasStarted) { valueString = Utilities.Round(value); return value; } // ignore new value if simulation has already started
+        // ignore new value if simulation has already started
+        if (projectileMotion.hasStarted) {
+            valueString = Utilities.Round(value);
+            return value;
+        }
 
         if (newValue != value ||
-                valueString != Utilities.Round(value) && Event.current.keyCode == KeyCode.Return && float.TryParse(valueString, out newValue)) {
-            if (newValue < min) { valueString = Utilities.Round(min); return finalValue; }
-            if (newValue > max) { valueString = Utilities.Round(max); return finalValue; }
-            finalValue = newValue;
-            valueString = Utilities.Round(finalValue);
+            valueString != Utilities.Round(value) &&
+            Event.current.keyCode == KeyCode.Return &&
+            float.TryParse(valueString, out newValue)) {
+                if (newValue < min) { valueString = Utilities.Round(min); return finalValue; }
+                if (newValue > max) { valueString = Utilities.Round(max); return finalValue; }
+                finalValue = newValue;
+                valueString = Utilities.Round(finalValue);
         }
 
         return finalValue;

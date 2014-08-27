@@ -183,12 +183,13 @@ public class ProjectileMotion : MonoBehaviour {
                 return Mathf.Infinity;
             } else {
                 return _height +
-                       Mathf.Pow(_initialVelocity * Mathf.Sin(_radAngle), 2.0f) / (2.0f * _gravityAcceleration);
+                       Mathf.Pow(_initialVelocity * Mathf.Sin(_radAngle), 2.0f) /
+                       (2.0f * _gravityAcceleration);
             }
         }
     }
 
-    // Current time passed from a start of the simulation
+    // Current time passed from the start of the simulation
     // seconds
     // calculated
     public float time {
@@ -214,7 +215,11 @@ public class ProjectileMotion : MonoBehaviour {
             if (_gravityAcceleration == 0.0f) {
                 return Mathf.Infinity;
             } else {
-                return (_initialVelocity * Mathf.Cos(_radAngle) / _gravityAcceleration) * (_initialVelocity * Mathf.Sin(_radAngle) + Mathf.Sqrt(Mathf.Pow(_initialVelocity * Mathf.Sin(_radAngle), 2.0f) + 2.0f * _gravityAcceleration * _height));
+                return (_initialVelocity * Mathf.Cos(_radAngle) / _gravityAcceleration) * (
+                           _initialVelocity * Mathf.Sin(_radAngle) +
+                           Mathf.Sqrt(Mathf.Pow(_initialVelocity * Mathf.Sin(_radAngle), 2.0f) +
+                           2.0f * _gravityAcceleration * _height)
+                       );
             }
         }
     }
@@ -448,7 +453,10 @@ public class ProjectileMotion : MonoBehaviour {
         Debug.Log("without air drag");
         _horizontalVelocity += 0;
         _verticalVelocity += - _gravityAcceleration * _deltaTime;
-        _velocity = Mathf.Sqrt(Mathf.Pow(_horizontalVelocity, 2.0f) + Mathf.Pow(_verticalVelocity, 2.0f));
+        _velocity = Mathf.Sqrt(
+                        Mathf.Pow(_horizontalVelocity, 2.0f) +
+                        Mathf.Pow(_verticalVelocity, 2.0f)
+                    );
     }
 
     private void calculateCurrentAngle() {
