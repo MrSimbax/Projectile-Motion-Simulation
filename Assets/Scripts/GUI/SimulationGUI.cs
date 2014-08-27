@@ -236,13 +236,13 @@ public class SimulationGUI : MonoBehaviour {
         GUILayout.Label("Projectile Motion Simulation\n\n" +
                         "Authors:\nProgrammer - Mateusz Przybył\nDesigner - Piotr Klemczak\n\n" +
                         
-                        "Runs on Unity3D engine (Free version), 3D models were made in Blender and"
+                        "Runs on Unity3D engine (Free version), 3D models were made in Blender and"+
                         "are on CC BY-NC 3.0 license.\n\n" +
                         
-                        "Unity project and source code are on GPLv3 license and will be available"
+                        "Unity project and source code are on GPLv3 license and will be available" +
                         "on github.com/mrsimbax/projectilemotionunity\n\n" +
 
-                        "This software is part of the educational project for school I Liceum"
+                        "This software is part of the educational project for school I Liceum" +
                         "Ogólnokształcące w Lesznie.");
         if (GUILayout.Button("OK")) {
             _isAboutWindowShowed = false;
