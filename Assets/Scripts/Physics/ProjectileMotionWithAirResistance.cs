@@ -55,16 +55,14 @@ public class ProjectileMotionWithAirResistance : ProjectileMotion {
     }
 
     protected override void calculateCurrentVelocity() {
-        calculateAirDragForce(_horizontalVelocity);
-        _horizontalVelocity += - (_airDragForce / _mass) * _deltaTime;
+        calculateAirDragForce(_velocityVector.horizontal);
+        float horizontal = - (_airDragForce / _mass) * _deltaTime;
 
-        calculateAirDragForce(_verticalVelocity);
-        _verticalVelocity += - (_gravityAcceleration + (_airDragForce / _mass)) * _deltaTime;
+        calculateAirDragForce(_velocityVector.vertical);
+        float vertical = - (_gravityAcceleration + (_airDragForce / _mass)) * _deltaTime;
 
-        _velocity = Mathf.Sqrt(
-                        Mathf.Pow(_horizontalVelocity, 2.0f) + Mathf.Pow(_verticalVelocity, 2.0f)
-                    );
-        calculateAirDragForce(_velocity);
+        _velocityVector.UpdateVector(horizontal, vertical);
+        calculateAirDragForce(_velocityVector.magnitude);
     }
 
     public override void setDefaultSettings() {

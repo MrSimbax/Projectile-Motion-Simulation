@@ -30,36 +30,11 @@ public class ProjectileMotion : MonoBehaviour {
         get { return gameObject; }
     }
 
-    // Current velocity of the ball
-    // meters per seconds
-    // can be negative
+    // Current velocity vector of the ball
+    // All data is in meters per seconds
     // calculated
-    public float velocity {
-        get { return _velocity; }
-    }
-
-    // Current horizontal velocity of the ball
-    // meters per seconds
-    // can be negative
-    // calculated
-    public float horizontalVelocity {
-        get { return _horizontalVelocity; }
-    }
-
-    // Current vertical velocity of the ball
-    // meters per seconds
-    // can be negative
-    // calculated
-    public float verticalVelocity {
-        get { return _verticalVelocity; }
-    }
-
-    // Current angle between the ground and the velocity vector
-    // degrees
-    // can be negative
-    // calculated
-    public float angle {
-        get { return _angle; }
+    public VelocityVector velocityVector {
+        get { return _velocityVector; }
     }
 
     // Initial velocity of the ball
@@ -71,7 +46,7 @@ public class ProjectileMotion : MonoBehaviour {
         set {
             if (value < 0.0f) { return; }
             if (!_hasStarted) {
-                _initialVelocity = _velocity = value;
+                _initialVelocity = value;
                 reset();
             }
         }
@@ -86,8 +61,7 @@ public class ProjectileMotion : MonoBehaviour {
         set {
             if (value < 0.0f || value > 90.0f) { return; }
             if (!_hasStarted) {
-                _launchAngle = _angle = value;
-                _radAngle = value * Mathf.Deg2Rad;
+                _launchAngle = value;
                 reset();
             }
         }
@@ -183,7 +157,7 @@ public class ProjectileMotion : MonoBehaviour {
                 return Mathf.Infinity;
             } else {
                 return _height +
-                       Mathf.Pow(_initialVelocity * Mathf.Sin(_radAngle), 2.0f) /
+                       Mathf.Pow(_initialVelocity * Mathf.Sin(_launchAngle * Mathf.Deg2Rad), 2.0f) /
                        (2.0f * _gravityAcceleration);
             }
         }
@@ -215,11 +189,13 @@ public class ProjectileMotion : MonoBehaviour {
             if (_gravityAcceleration == 0.0f) {
                 return Mathf.Infinity;
             } else {
-                return (_initialVelocity * Mathf.Cos(_radAngle) / _gravityAcceleration) * (
-                           _initialVelocity * Mathf.Sin(_radAngle) +
-                           Mathf.Sqrt(Mathf.Pow(_initialVelocity * Mathf.Sin(_radAngle), 2.0f) +
-                           2.0f * _gravityAcceleration * _height)
-                       );
+                return ((_initialVelocity *
+                    Mathf.Cos(_launchAngle * Mathf.Deg2Rad) / _gravityAcceleration) * (
+                    _initialVelocity * Mathf.Sin(_launchAngle * Mathf.Deg2Rad) +
+                    Mathf.Sqrt(
+                        Mathf.Pow(_initialVelocity * Mathf.Sin(_launchAngle * Mathf.Deg2Rad), 2.0f)+
+                        2.0f * _gravityAcceleration * _height)
+                    ));
             }
         }
     }
@@ -257,11 +233,7 @@ public class ProjectileMotion : MonoBehaviour {
     protected float _height;
 
     // Calculated values:
-    protected float _velocity;
-    protected float _horizontalVelocity;
-    protected float _verticalVelocity;
-    protected float _radLaunchAngle;
-    protected float _angle;
+    protected VelocityVector _velocityVector;
     protected float _time;
     protected float _deltaTime;
     protected float _xPos;
@@ -271,7 +243,6 @@ public class ProjectileMotion : MonoBehaviour {
     protected float _timeWhenReachedMaxHeight;
 
     // Helpful values:
-    protected float _radAngle;
     protected float _initialXPos;
     protected float _initialYPos;
     protected float _initialZPos;
@@ -338,14 +309,7 @@ public class ProjectileMotion : MonoBehaviour {
     }
 
     private void resetVelocity() {
-        _velocity = _initialVelocity;
-        _horizontalVelocity = _initialVelocity * Mathf.Cos(_radLaunchAngle);
-        _verticalVelocity = _initialVelocity * Mathf.Sin(_radLaunchAngle);
-    }
-
-    private void resetAngle() {
-        _angle = _launchAngle;
-        _radAngle = _radLaunchAngle;
+        _velocityVector.SetVector(_initialVelocity, _launchAngle);
     }
 
     private void resetMaxHeight() {
@@ -367,7 +331,6 @@ public class ProjectileMotion : MonoBehaviour {
         resetCatapult();
 
         resetTime();
-        resetAngle();
         resetVelocity();
         resetMaxHeight();
 
@@ -379,8 +342,7 @@ public class ProjectileMotion : MonoBehaviour {
         if (_isRunning) { return; }
         _initialVelocity = 50.0f;
         _gravityAcceleration = 9.81f;
-        _launchAngle = _angle = 45.0f;
-        _radLaunchAngle = _radAngle = _angle * Mathf.Deg2Rad;
+        _launchAngle = 45.0f;
         _simulationSpeed = 1.0f;
         _height = 10.0f;
         reset();
@@ -410,7 +372,12 @@ public class ProjectileMotion : MonoBehaviour {
         _isTrajectoryShowed = false;
     }
 
+    private void initObjects() {
+        _velocityVector = new VelocityVector();
+    }
+
     public void Start() {
+        initObjects();
         setupAnimation();
         initPosition();
         setDefaultSettings();
@@ -444,28 +411,16 @@ public class ProjectileMotion : MonoBehaviour {
     }
 
     private void calculateNextPosition() {
-        _xPos += _horizontalVelocity * _deltaTime;
-        _yPos += _verticalVelocity * _deltaTime;
-        _zPos += 0;
+        _xPos += _velocityVector.horizontal * _deltaTime;
+        _yPos += _velocityVector.vertical * _deltaTime;
+        _zPos += 0.0f;
     }
 
     protected virtual void calculateCurrentVelocity() {
         Debug.Log("without air drag");
-        _horizontalVelocity += 0;
-        _verticalVelocity += - _gravityAcceleration * _deltaTime;
-        _velocity = Mathf.Sqrt(
-                        Mathf.Pow(_horizontalVelocity, 2.0f) +
-                        Mathf.Pow(_verticalVelocity, 2.0f)
-                    );
-    }
-
-    private void calculateCurrentAngle() {
-        if (!Utilities.isZero(_horizontalVelocity)) {
-            _angle = Mathf.Atan(_verticalVelocity / _horizontalVelocity) * Mathf.Rad2Deg;
-        } else {
-            if (_horizontalVelocity < 0.0f) { _angle = -90.0f; }
-            else { _angle = 90.0f; }
-        }
+        float horizontal = 0.0f;
+        float vertical = - _gravityAcceleration * _deltaTime;
+        _velocityVector.UpdateVector(horizontal, vertical);
     }
 
     private void calculateMaxHeight() {
@@ -502,7 +457,6 @@ public class ProjectileMotion : MonoBehaviour {
         calculateNextPosition();
 
         // Info for user
-        calculateCurrentAngle();
         calculateMaxHeight();
 
         changePosition();

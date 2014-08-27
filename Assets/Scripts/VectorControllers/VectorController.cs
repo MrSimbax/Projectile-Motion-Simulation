@@ -21,11 +21,11 @@ public abstract class VectorController : MonoBehaviour {
 	
 	public void Update () {
 		
-		if (!_isShowed || Utilities.isZero(projectileMotion.velocity)) {
-			gameObject.renderer.enabled = false;
+		if (!_isShowed || Utilities.isZero(projectileMotion.velocityVector.magnitude)) {
+			renderer.enabled = false;
 			cone.renderer.enabled = false;
 		} else {
-			gameObject.renderer.enabled = true;
+			renderer.enabled = true;
 			cone.renderer.enabled = true;
 		}
 
