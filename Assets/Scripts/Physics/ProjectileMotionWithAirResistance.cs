@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using System.Collections;
 
 public class ProjectileMotionWithAirResistance : ProjectileMotion {
@@ -76,3 +76,4 @@ public class ProjectileMotionWithAirResistance : ProjectileMotion {
         base.setDefaultSettings();
     }
 }
+*/

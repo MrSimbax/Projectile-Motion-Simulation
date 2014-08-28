@@ -66,7 +66,7 @@ public class SimulationGUI : MonoBehaviour {
     private bool _isVectorVxShowed;
     private bool _isVectorVyShowed;
     private bool _isVectorVShowed;
-    private bool _isTrajectoryShowed;
+    private bool _isTrajectoryShown;
     
     public void Start() {
         _initialVelocity = projectileMotion.initialVelocity;
@@ -86,7 +86,7 @@ public class SimulationGUI : MonoBehaviour {
         _isVectorVxShowed = false;
         _isVectorVyShowed = false;
         _isVectorVShowed = false;
-        _isTrajectoryShowed = false;
+        _isTrajectoryShown = false;
 
         _pauseButtonString = "Pause";
 
@@ -210,11 +210,11 @@ public class SimulationGUI : MonoBehaviour {
         _isBallCameraEnabled = GUILayout.Toggle(_isBallCameraEnabled, "Camera on point");
         _isAirResistance = GUILayout.Toggle(_isAirResistance,
                                             "Air resistance (not implemented yet)");
-        _isTrajectoryShowed = GUILayout.Toggle(_isTrajectoryShowed, "Show trajectory");
+        _isTrajectoryShown = GUILayout.Toggle(_isTrajectoryShown, "Show trajectory");
         if (_isBallCameraEnabled != cameraController.isBallCamEnabled) {
             cameraController.switchCamera();
         }
-        projectileMotion.isTrajectoryShowed = _isTrajectoryShowed;
+        projectileMotion.trajectoryController.isShown = _isTrajectoryShown;
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();

@@ -13,12 +13,12 @@ public class ProjectileMotion : MonoBehaviour {
     // used for animation of throwing
     public CatapultController catapultController;
     public BallBaseController ballBaseController;
+    public TrajectoryController trajectoryController;
 
     
     // Used from the outside:
     // ----------------------
 
-    // Object which this script is attached to
     public GameObject ball {
         get { return gameObject; }
     }
@@ -179,12 +179,6 @@ public class ProjectileMotion : MonoBehaviour {
         }
     }
 
-    // Is trajectory showing on the screen?
-    public bool isTrajectoryShowed {
-        set { _isTrajectoryShowed = value; }
-        get { return _isTrajectoryShowed; }
-    }
-
     // Has simulation already started?
     public bool hasStarted {
         get { return _hasStarted; }
@@ -225,13 +219,9 @@ public class ProjectileMotion : MonoBehaviour {
     protected float _initialXPos;
     protected float _initialYPos;
     protected float _initialZPos;
-    protected TrailRenderer _trajectoryRenderer;
     protected bool _hasStarted;
     protected bool _isRunning;
     protected bool _isDone;
-    protected bool _isTrailOn;
-    protected bool _isPrevTrailOn; // for performance reasons
-    protected bool _isTrajectoryShowed;
 
     // Methods
     // -------
@@ -249,7 +239,7 @@ public class ProjectileMotion : MonoBehaviour {
     // Resume simulation after start or pause
     public void resume() {
         if (_hasStarted) {
-            _isTrailOn = true;
+            trajectoryController.isRendering = true;
             _isRunning = true;
         }
     }
@@ -286,7 +276,7 @@ public class ProjectileMotion : MonoBehaviour {
         _isDone = false;
         _isRunning = false;
         _hasStarted = false;
-        _isTrailOn = false;
+        trajectoryController.isRendering = false;
     }
 
     // Stops and resets the simulation
@@ -326,13 +316,6 @@ public class ProjectileMotion : MonoBehaviour {
         _isRunning = false;
     }
 
-    private void setupTrailRenderer() {
-        _trajectoryRenderer = GetComponent<TrailRenderer>();
-        _isTrailOn = false;
-        _isPrevTrailOn = false;
-        _isTrajectoryShowed = false;
-    }
-
     private void initObjects() {
         _velocityVector = new VelocityVector();
     }
@@ -342,32 +325,6 @@ public class ProjectileMotion : MonoBehaviour {
         initPosition();
         setDefaultSettings();
         setupSimulation();
-        setupTrailRenderer();
-    }
-
-    private void renderTrajectory() {
-        // If simulation haven't started yet, then don't render
-        if (_isTrailOn != _isPrevTrailOn) {
-            if (_isTrailOn) {
-                _trajectoryRenderer.time = Mathf.Infinity; // Render
-                _isPrevTrailOn = true;
-            } else {
-                _trajectoryRenderer.time = 0.0f; // Don't render
-                _isPrevTrailOn = false;
-            }
-        }
-        // Check, if user want to show the trajectory
-        if (_isTrajectoryShowed) {
-            _trajectoryRenderer.endWidth = 1.0f;
-            _trajectoryRenderer.startWidth = 1.0f;
-        } else {
-            _trajectoryRenderer.endWidth = 0.0f;
-            _trajectoryRenderer.startWidth = 0.0f;
-        }
-    }
-
-    public void Update() {
-        renderTrajectory();
     }
 
     private void calculateNextPosition() {
