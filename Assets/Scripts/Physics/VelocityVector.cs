@@ -33,12 +33,12 @@ public class VelocityVector {
         SetVector(0.0f, 0.0f);
     }
 
-    public void UpdateVector(float aHorizontal, float aVertical) {
-        _vertical += aVertical;
-        _horizontal += aHorizontal;
+    public void UpdateVector(float aDeltaHorizontal, float aDeltaVertical) {
+        _vertical += aDeltaVertical;
+        _horizontal += aDeltaHorizontal;
 
         _magnitude = Mathf.Sqrt(
-                Mathf.Pow(aVertical, 2.0f) + Mathf.Pow(aHorizontal, 2.0f)
+                Mathf.Pow(_vertical, 2.0f) + Mathf.Pow(_horizontal, 2.0f)
             );
         _angle = CalculateAngle();
     }
