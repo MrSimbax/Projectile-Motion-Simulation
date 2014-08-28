@@ -11,15 +11,8 @@ public class ProjectileMotion : MonoBehaviour {
     // Must be provided in the inspector:
     // ----------------------------------
     // used for animation of throwing
-    public CatapultAnimationController catAnimController;
-
-    public Transform ballTransform;
-    public Transform projectileTransform;
-
-    public GameObject catapult;
-    // public GameObject catapultBase;
-
-    public GameObject ballBase; // a cylinder, on top of it the ball is put
+    public CatapultController catapultController;
+    public BallBaseController ballBaseController;
 
     
     // Used from the outside:
@@ -103,27 +96,13 @@ public class ProjectileMotion : MonoBehaviour {
     public float height {
         get { return _height; }
         set {
-            if (value < 0.0f) { return; }
-
-            // if part of the ball is below ground
-            if (value <= transform.localScale.y / 2.0f) {
-                ballBase.renderer.enabled = false; // don't show the base
-            } else {
-                ballBase.renderer.enabled = true; // show it otherwise
+            if (value < 0.0f) {
+                Debug.LogError("ProjectileMotion: Height can't be less than zero.");
+                return;
             }
 
             if (!_hasStarted) {
-                reset(); // put ball on the base
-
-                // Set the ball base
-                // 0.5 is a radius of the ball
-                float ballBaseHeight = value - 0.5f;
-                // center of the cylinder put in the middle
-                ballBase.transform.localPosition = new Vector3(0.0f, ballBaseHeight / 2.0f, 0.0f);
-                // scale it to the proper height
-                ballBase.transform.localScale = new Vector3(1.0f, ballBaseHeight / 2.0f, 1.0f);
-
-                // And finally set the value
+                ballBaseController.height = value;
                 _initialYPos = _height = value;
                 reset();
             }
@@ -257,16 +236,10 @@ public class ProjectileMotion : MonoBehaviour {
     // Methods
     // -------
 
-    private void setNotMovingCatapultWithBall() {
-        catapult.transform.parent = projectileTransform.parent;
-    }
-
     // Starts simulation
     public void start() {
         if (!_hasStarted) {
-            setNotMovingCatapultWithBall();
-
-            catAnimController.throw_();
+            catapultController.JustThrow();
 
             _hasStarted = true;
             resume();
@@ -295,14 +268,6 @@ public class ProjectileMotion : MonoBehaviour {
         gameObject.transform.localPosition = new Vector3(_xPos, _yPos, _zPos);
     }
 
-    private void setMovingCatapultWithBall() {
-        catapult.transform.parent = ball.transform;
-    }
-
-    private void resetCatapult() {
-        catAnimController.reset();
-    }
-
     private void resetTime() {
         _time = 0.0f;
         _deltaTime = Time.fixedDeltaTime * simulationSpeed;
@@ -327,8 +292,7 @@ public class ProjectileMotion : MonoBehaviour {
     // Stops and resets the simulation
     public void reset() {
         backToInitialPosition();
-        setMovingCatapultWithBall();
-        resetCatapult();
+        catapultController.JustReset();
 
         resetTime();
         resetVelocity();
@@ -350,9 +314,6 @@ public class ProjectileMotion : MonoBehaviour {
 
     // Behaviour
     // ---------
-    private void setupAnimation() {
-        catAnimController.stretch();
-    }
 
     private void initPosition() {
         _initialXPos = gameObject.transform.localPosition.x;
@@ -378,7 +339,6 @@ public class ProjectileMotion : MonoBehaviour {
 
     public void Start() {
         initObjects();
-        setupAnimation();
         initPosition();
         setDefaultSettings();
         setupSimulation();
