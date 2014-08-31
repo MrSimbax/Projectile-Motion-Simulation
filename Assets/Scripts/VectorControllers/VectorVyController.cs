@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using System.Collections;
 
 public class VectorVyController : VectorController {
@@ -20,3 +20,4 @@ public class VectorVyController : VectorController {
         cone.transform.localPosition = new Vector3(0.0f, transform.localPosition.y * 2.0f, 0.0f);
     }
 }
+*/

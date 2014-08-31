@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using System.Collections;
 
 public class VectorVController : VectorController {
@@ -21,3 +21,4 @@ public class VectorVController : VectorController {
                                                 transform.localPosition.y * 2.0f, 0.0f);
     }
 }
+*/

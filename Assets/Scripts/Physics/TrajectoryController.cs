@@ -14,6 +14,10 @@ public class TrajectoryController : MonoBehaviour {
         }
     }
 
+    public void SwitchIsShown() {
+        isShown = !_isShown;
+    }
+
     public bool isRendering {
         get { return _isRendering; }
         set {

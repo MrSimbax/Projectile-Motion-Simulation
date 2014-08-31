@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using System.Collections;
 
 public class CameraController : MonoBehaviour {
@@ -81,3 +81,4 @@ public class CameraController : MonoBehaviour {
         }
     }
 }
+*/

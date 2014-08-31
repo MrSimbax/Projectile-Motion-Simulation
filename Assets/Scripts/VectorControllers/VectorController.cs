@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using System.Collections;
 
 public abstract class VectorController : MonoBehaviour {
@@ -33,4 +33,4 @@ public abstract class VectorController : MonoBehaviour {
 	}
 
 	public abstract void transformVector();
-}
+}*/

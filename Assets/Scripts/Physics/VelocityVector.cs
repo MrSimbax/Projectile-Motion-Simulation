@@ -33,6 +33,10 @@ public class VelocityVector {
         SetVector(0.0f, 0.0f);
     }
 
+    public VelocityVector(VelocityVector other) {
+        SetVector(other.magnitude, other.angle);
+    }
+
     public void UpdateVector(float aDeltaHorizontal, float aDeltaVertical) {
         _vertical += aDeltaVertical;
         _horizontal += aDeltaHorizontal;

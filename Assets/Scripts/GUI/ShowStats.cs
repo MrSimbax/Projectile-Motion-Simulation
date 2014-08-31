@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using System.Collections;
 
 public class ShowStats : MonoBehaviour {
@@ -40,3 +40,4 @@ public class ShowStats : MonoBehaviour {
                                                            timeWhenReachedMaxHeight)+" seconds\n";
     }
 }
+*/
