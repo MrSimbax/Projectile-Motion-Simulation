@@ -21,6 +21,8 @@ public class SimulationController : MonoBehaviour {
     public ProjectileMotionData initData { get; set; }
     public ProjectileMotion projectileMotion;
 
+    public ProjectileMotionData currentData;
+
     public bool hasStarted {
         get {
             return _hasStarted;
@@ -48,6 +50,7 @@ public class SimulationController : MonoBehaviour {
         ballBaseController.height = 0.0f;
         trajectoryController.isRendering = false;
         initData = new ProjectileMotionData();
+        currentData = initData;
         SetDefaultSettings();
         projectileMotion = null;
         _hasStarted = false;
@@ -91,6 +94,7 @@ public class SimulationController : MonoBehaviour {
 
         if (!_hasStarted) {
             projectileMotion = new ProjectileMotion(initData);
+            currentData = projectileMotion.data;
             catapultController.JustThrow();
             _hasStarted = true;
         }
@@ -130,6 +134,7 @@ public class SimulationController : MonoBehaviour {
         // vectors
 
         projectileMotion = null;
+        currentData = initData;
 
         if (OnSimulationReset != null) {
             OnSimulationReset();

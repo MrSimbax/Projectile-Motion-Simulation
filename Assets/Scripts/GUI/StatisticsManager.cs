@@ -20,18 +20,17 @@ public class StatisticsManager : MonoBehaviour {
     private ProjectileMotionData _data;
 
     public void OnEnable() {
-        SimulationController.OnSimulationStart += GetDataFromSimulation;
-        SimulationController.OnSimulationReset += GetDataFromController;
         SimulationController.OnSimulationReset += UpdateStats;
         ProjectileMotion.OnNextStep += UpdateStats;
     }
 
     public void OnDisable() {
-        SimulationController.OnSimulationStart -= GetDataFromSimulation;
+        SimulationController.OnSimulationReset -= UpdateStats;
         ProjectileMotion.OnNextStep -= UpdateStats;
     }
 
     public void UpdateStats() {
+        _data = simulationController.currentData;
         if (_data == null) {
             Debug.LogError("StatisticsManager: _data is null");
             return;
@@ -44,13 +43,5 @@ public class StatisticsManager : MonoBehaviour {
         velocityInput.value = Utilities.Round(_data.velocityVector.magnitude);
         velocityXInput.value = Utilities.Round(_data.velocityVector.horizontal);
         velocityYInput.value = Utilities.Round(_data.velocityVector.vertical);
-    }
-
-    public void GetDataFromSimulation() {
-        _data = simulationController.projectileMotion.data;
-    }
-
-    public void GetDataFromController() {
-        _data = simulationController.initData;
     }
 }
