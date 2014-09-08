@@ -8,6 +8,7 @@ public class StatisticsManager : MonoBehaviour {
     public InputField deltaTimeInput;
     public InputField xPosInput;
     public InputField yPosInput;
+    public InputField angleInput;
     public InputField velocityInput;
     public InputField velocityXInput;
     public InputField velocityYInput;
@@ -39,6 +40,7 @@ public class StatisticsManager : MonoBehaviour {
         deltaTimeInput.value = Utilities.Round(_data.deltaTime);
         xPosInput.value = Utilities.Round(_data.xPos);
         yPosInput.value = Utilities.Round(_data.yPos);
+        angleInput.value = Utilities.Round(_data.velocityVector.angle);
         velocityInput.value = Utilities.Round(_data.velocityVector.magnitude);
         velocityXInput.value = Utilities.Round(_data.velocityVector.horizontal);
         velocityYInput.value = Utilities.Round(_data.velocityVector.vertical);
