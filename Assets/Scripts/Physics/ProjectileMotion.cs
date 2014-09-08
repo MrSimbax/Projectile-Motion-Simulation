@@ -5,6 +5,9 @@ public class ProjectileMotion {
 
     public ProjectileMotionData data;
 
+    public delegate void ProjectileMotionAction();
+    public static event ProjectileMotionAction OnNextStep;
+
     public ProjectileMotion() {
         data = new ProjectileMotionData();
         data.yPos = 0.0f;
@@ -36,5 +39,8 @@ public class ProjectileMotion {
         CalculateVelocity();
         CalculateNextPosition();
         UpdateTime();
+        if (OnNextStep != null) {
+            OnNextStep();
+        }
     }
 }

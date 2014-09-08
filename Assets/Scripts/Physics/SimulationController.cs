@@ -9,6 +9,7 @@ public class SimulationController : MonoBehaviour {
     public static event SimulationControlAction OnSimulationStart;
     public static event SimulationControlAction OnSimulationPause;
     public static event SimulationControlAction OnSimulationReset;
+    public static event SimulationControlAction OnSimulationDone;
 
     public CatapultController catapultController;
     public BallBaseController ballBaseController;
@@ -18,7 +19,7 @@ public class SimulationController : MonoBehaviour {
     // public Vector.VyController vectorVy;
 
     public ProjectileMotionData initData { get; set; }
-    private ProjectileMotion projectileMotion;
+    public ProjectileMotion projectileMotion;
 
     public bool hasStarted {
         get {
@@ -66,6 +67,10 @@ public class SimulationController : MonoBehaviour {
         if (projectileMotion.data.yPos <= 0.0f) {
             _isDone = true;
             _isRunning = false;
+
+            if (OnSimulationDone != null) {
+                OnSimulationDone();
+            }
         }
     }
 
@@ -108,7 +113,6 @@ public class SimulationController : MonoBehaviour {
             OnSimulationPause();
         }
 
-        trajectoryController.isRendering = false;
         _isRunning = false;
     }
 
