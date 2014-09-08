@@ -35,10 +35,18 @@ public class ProjectileMotion {
         data.time += data.deltaTime;
     }
 
+    private void UpdateMaxHeight() {
+        if (data.yPos > data.maxY) {
+            data.maxY = data.yPos;
+            data.maxYTime = data.time;
+        }
+    }
+
     public void StepToNextPosition() {
         CalculateVelocity();
         CalculateNextPosition();
         UpdateTime();
+        UpdateMaxHeight();
         if (OnNextStep != null) {
             OnNextStep();
         }

@@ -43,5 +43,7 @@ public class StatisticsManager : MonoBehaviour {
         velocityInput.value = Utilities.Round(_data.velocityVector.magnitude);
         velocityXInput.value = Utilities.Round(_data.velocityVector.horizontal);
         velocityYInput.value = Utilities.Round(_data.velocityVector.vertical);
+        maxYInput.value = Utilities.Round(_data.maxY);
+        maxYTimeInput.value = Utilities.Round(_data.maxYTime);
     }
 }

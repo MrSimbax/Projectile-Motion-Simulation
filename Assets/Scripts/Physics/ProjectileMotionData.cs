@@ -9,6 +9,8 @@ public class ProjectileMotionData {
     public float gravityAcceleration;
     public float time;
     public float deltaTime;
+    public float maxY;
+    public float maxYTime;
 
     public ProjectileMotionData() {
         xPos = 0.0f;
@@ -18,6 +20,8 @@ public class ProjectileMotionData {
         gravityAcceleration = 9.81f;
         time = 0.0f;
         deltaTime = Time.fixedDeltaTime;
+        maxY = 0.0f;
+        maxYTime = 0.0f;
     }
 
     public ProjectileMotionData(ProjectileMotionData other) {
@@ -28,5 +32,7 @@ public class ProjectileMotionData {
         gravityAcceleration = other.gravityAcceleration;
         time = other.time;
         deltaTime = other.deltaTime;
+        maxY = other.maxY;
+        maxYTime = other.maxYTime;
     }
 }
