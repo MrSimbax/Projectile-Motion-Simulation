@@ -75,5 +75,4 @@ public class ProjectileMotionWithAirResistance : ProjectileMotion {
 
         base.setDefaultSettings();
     }
-}
-*/
+}*/

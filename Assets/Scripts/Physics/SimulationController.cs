@@ -45,7 +45,15 @@ public class SimulationController : MonoBehaviour {
     private bool _isRunning;
     private bool _isDone;
 
-    public void Start() {
+    public void OnEnable() {
+        initData.SomethingHasChanged += Reset;
+    }
+
+    public void OnDisable() {
+        initData.SomethingHasChanged -= Reset;
+    }
+
+    public void Awake() {
         catapultController.JustReset();
         ballBaseController.height = 0.0f;
         trajectoryController.isRendering = false;

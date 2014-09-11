@@ -3,6 +3,9 @@ using System.Collections;
 
 public class VelocityVector {
 
+    public delegate void VelocityVectorAction();
+    public event VelocityVectorAction SomethingHasChanged;
+
     public float magnitude {
         get { return _magnitude; }
     }
@@ -45,6 +48,9 @@ public class VelocityVector {
                 Mathf.Pow(_vertical, 2.0f) + Mathf.Pow(_horizontal, 2.0f)
             );
         _angle = CalculateAngle();
+        if (SomethingHasChanged != null) {
+            SomethingHasChanged();
+        }
     }
 
     public void SetVector(float aMagnitude, float aAngle) {
@@ -56,6 +62,9 @@ public class VelocityVector {
         _vertical = aMagnitude * Mathf.Sin(aAngle * Mathf.Deg2Rad);
         _horizontal = aMagnitude * Mathf.Cos(aAngle * Mathf.Deg2Rad);
         _angle = aAngle;
+        if (SomethingHasChanged != null) {
+            SomethingHasChanged();
+        }
     }
 
     private float CalculateAngle() {
