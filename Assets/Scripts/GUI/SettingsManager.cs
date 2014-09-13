@@ -17,23 +17,29 @@ public class SettingsManager : MonoBehaviour {
         heightInput.onSubmit.AddListener(ChangeHeight);
         gravityAccInput.onSubmit.AddListener(ChangeGravityAcc);
 
-        ProjectileMotionData data = simulationController.initData;
-        velocityInput.value = Utilities.Round(data.velocityVector.magnitude);
-        angleInput.value = Utilities.Round(data.velocityVector.angle);
-        heightInput.value = Utilities.Round(data.yPos);
-        gravityAccInput.value = Utilities.Round(data.gravityAcceleration);
+        UpdateInputs();
     }
 
     public void OnEnable() {
         //ProjectileMotionData.SomethingHasChanged += UpdateIns;
         SimulationController.OnSimulationStart += DisableInputs;
         SimulationController.OnSimulationReset += EnableInputs;
+        SimulationController.OnSimulationReset += UpdateInputs;
     }
 
     public void OnDisable() {
         //ProjectileMotionData.SomethingHasChanged -= UpdateIns;
         SimulationController.OnSimulationStart -= DisableInputs;
         SimulationController.OnSimulationReset -= EnableInputs;
+        SimulationController.OnSimulationReset -= UpdateInputs;
+    }
+
+    public void UpdateInputs() {
+        ProjectileMotionData data = simulationController.initData;
+        velocityInput.value = Utilities.Round(data.velocityVector.magnitude);
+        angleInput.value = Utilities.Round(data.velocityVector.angle);
+        heightInput.value = Utilities.Round(data.yPos);
+        gravityAccInput.value = Utilities.Round(data.gravityAcceleration);
     }
 
     public void EnableInputs() {
