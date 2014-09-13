@@ -13,15 +13,37 @@ public class ProjectileMotion {
         data.yPos = 0.0f;
         data.velocityVector.SetVector(10.0f, 45.0f);
         data.gravityAcceleration = 9.81f;
+        data.mass = 1.0f;
+        data.airDensity = 1.225f;
+        data.dragCoefficient = 0.5f;
+        data.crossSectionalArea = 0.0314f;
+        data.isAirDrag = false;
     }
 
     public ProjectileMotion(ProjectileMotionData aPmData) {
         data = new ProjectileMotionData(aPmData);
     }
 
+    private float CalculateAirDragForce(float velocity) {
+        return 0.5f * data.airDensity * data.crossSectionalArea * data.dragCoefficient *
+            Mathf.Pow(velocity, 2.0f);
+    }
+
     private void CalculateVelocity() {
-        float deltaHorizontalVelocity = 0.0f;
-        float deltaVerticalVelocity = - data.gravityAcceleration * data.deltaTime;
+        float deltaHorizontalVelocity;
+        float deltaVerticalVelocity;
+        if (data.isAirDrag) {
+            float airDragForce = 0.0f;
+            airDragForce = CalculateAirDragForce(data.velocityVector.horizontal);
+            Debug.Log (data.mass);
+            Debug.Log (airDragForce);
+            deltaHorizontalVelocity = - (airDragForce / data.mass) * data.deltaTime;
+            airDragForce = CalculateAirDragForce(data.velocityVector.vertical);
+            deltaVerticalVelocity = - (data.gravityAcceleration + (airDragForce / data.mass)) * data.deltaTime;
+        } else {
+            deltaHorizontalVelocity = 0.0f;
+            deltaVerticalVelocity = - data.gravityAcceleration * data.deltaTime;
+        }
         data.velocityVector.UpdateVector(deltaHorizontalVelocity, deltaVerticalVelocity);
     }
 

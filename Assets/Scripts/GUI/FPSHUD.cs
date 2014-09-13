@@ -4,6 +4,12 @@ using System.Collections;
 public class FPSHUD : MonoBehaviour
 {
     float deltaTime = 0.0f;
+
+    bool isShown = false;
+
+    public void SwitchIsShown() {
+        isShown = !isShown;
+    }
     
     void Update()
     {
@@ -12,6 +18,8 @@ public class FPSHUD : MonoBehaviour
     
     void OnGUI()
     {
+        if (!isShown) return;
+
         int w = Screen.width, h = Screen.height;
         
         GUIStyle style = new GUIStyle();

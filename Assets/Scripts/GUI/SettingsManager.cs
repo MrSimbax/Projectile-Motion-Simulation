@@ -11,27 +11,55 @@ public class SettingsManager : MonoBehaviour {
     public InputField heightInput;
     public InputField gravityAccInput;
 
+    public InputField massInput;
+    public InputField airDensityInput;
+    public InputField dragCoefficientInput;
+    public InputField areaInput;
+
+    public Toggle airDragToggle;
+
     public void Start() {
         velocityInput.onSubmit.AddListener(ChangeVelocity);
         angleInput.onSubmit.AddListener(ChangeAngle);
         heightInput.onSubmit.AddListener(ChangeHeight);
         gravityAccInput.onSubmit.AddListener(ChangeGravityAcc);
-
+        massInput.onSubmit.AddListener(ChangeMass);
+        airDensityInput.onSubmit.AddListener(ChangeAirDensity);
+        dragCoefficientInput.onSubmit.AddListener(ChangeDragCoefficient);
+        areaInput.onSubmit.AddListener(ChangeArea);
         UpdateInputs();
     }
 
     public void OnEnable() {
         //ProjectileMotionData.SomethingHasChanged += UpdateIns;
-        SimulationController.OnSimulationStart += DisableInputs;
-        SimulationController.OnSimulationReset += EnableInputs;
+        SimulationController.OnSimulationStart += DisableAllInputs;
+        SimulationController.OnSimulationReset += EnableAllInputs;
         SimulationController.OnSimulationReset += UpdateInputs;
+        airDragToggle.onValueChanged.AddListener(SwitchAirDrag);
     }
 
     public void OnDisable() {
         //ProjectileMotionData.SomethingHasChanged -= UpdateIns;
-        SimulationController.OnSimulationStart -= DisableInputs;
-        SimulationController.OnSimulationReset -= EnableInputs;
+        SimulationController.OnSimulationStart -= DisableAllInputs;
+        SimulationController.OnSimulationReset -= EnableAllInputs;
         SimulationController.OnSimulationReset -= UpdateInputs;
+        airDragToggle.onValueChanged.RemoveListener(SwitchAirDrag);
+    }
+
+    public void SetAirDragInputsInteractivity() {
+        if (airDragToggle.isOn) {
+            EnableAirDragInputs();
+        } else {
+            DisableAirDragInputs();
+        }
+    }
+
+    public void SwitchAirDrag(bool value) {
+        if (value) {
+            EnableAirDragInputs();
+        } else {
+            DisableAirDragInputs();
+        }
     }
 
     public void UpdateInputs() {
@@ -40,30 +68,43 @@ public class SettingsManager : MonoBehaviour {
         angleInput.value = Utilities.Round(data.velocityVector.angle);
         heightInput.value = Utilities.Round(data.yPos);
         gravityAccInput.value = Utilities.Round(data.gravityAcceleration);
+        massInput.value = Utilities.Round(data.mass);
+        airDensityInput.value = Utilities.Round(data.airDensity);
+        dragCoefficientInput.value = Utilities.Round(data.dragCoefficient);
+        areaInput.value = Utilities.Round(data.crossSectionalArea);
     }
 
-    public void EnableInputs() {
+    public void EnableAllInputs() {
         velocityInput.interactable = true;
         angleInput.interactable = true;
         heightInput.interactable = true;
         gravityAccInput.interactable = true;
+        airDragToggle.interactable = true;
+        SetAirDragInputsInteractivity();
     }
 
-    public void DisableInputs() {
+    public void DisableAllInputs() {
         velocityInput.interactable = false;
         angleInput.interactable = false;
         heightInput.interactable = false;
         gravityAccInput.interactable = false;
+        airDragToggle.interactable = false;
+        SetAirDragInputsInteractivity();
     }
-    /*
-    public void UpdateIns() {
-        ProjectileMotionData data = simulationController.currentData;
-        velocityInput.value = Utilities.Round(data.velocityVector.magnitude);
-        angleInput.value = Utilities.Round(data.velocityVector.angle);
-        heightInput.value = Utilities.Round(data.yPos);
-        gravityAccInput.value = Utilities.Round(data.gravityAcceleration);
+
+    public void EnableAirDragInputs() {
+        massInput.interactable = true;
+        airDensityInput.interactable = true;
+        dragCoefficientInput.interactable = true;
+        areaInput.interactable = true;
     }
-*/
+
+    public void DisableAirDragInputs() {
+        massInput.interactable = false;
+        airDensityInput.interactable = false;
+        dragCoefficientInput.interactable = false;
+        areaInput.interactable = false;
+    }
 
     public float ParseValue(string value, InputField inputField, float min, float max) {
         float f;
@@ -106,5 +147,29 @@ public class SettingsManager : MonoBehaviour {
         float gravityAcc = ParseValue(value, gravityAccInput, 0.0f, 100.0f);
         if (gravityAcc == Mathf.Infinity) { return; }
         simulationController.initData.gravityAcceleration = gravityAcc;
+    }
+
+    public void ChangeMass(string value) {
+        float mass = ParseValue(value, massInput, 0.0f, 100.0f);
+        if (mass == Mathf.Infinity) { return; }
+        simulationController.initData.mass = mass;
+    }
+
+    public void ChangeAirDensity(string value) {
+        float airDensity = ParseValue(value, airDensityInput, 0.0f, 999.0f);
+        if (airDensity == Mathf.Infinity) { return; }
+        simulationController.initData.airDensity = airDensity;
+    }
+
+    public void ChangeDragCoefficient(string value) {
+        float dragCoefficient = ParseValue(value, dragCoefficientInput, 0.0f, 10.0f);
+        if (dragCoefficient == Mathf.Infinity) { return; }
+        simulationController.initData.dragCoefficient = dragCoefficient;
+    }
+
+    public void ChangeArea(string value) {
+        float area = ParseValue(value, areaInput, 0.0f, 1.0f);
+        if (area == Mathf.Infinity) { return; }
+        simulationController.initData.crossSectionalArea = area;
     }
 }

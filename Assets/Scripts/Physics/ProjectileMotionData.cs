@@ -6,6 +6,16 @@ public class ProjectileMotionData {
     public delegate void ProjectileMotionDataAction();
     public event ProjectileMotionDataAction SomethingHasChanged;
 
+    public bool isAirDrag {
+        get { return _isAirDrag; }
+        set {
+            _isAirDrag = value;
+            if (SomethingHasChanged != null) {
+                SomethingHasChanged();
+            }
+        }
+    }
+
     public float xPos {
         get { return _xPos; }
         set {
@@ -90,6 +100,61 @@ public class ProjectileMotionData {
         }
     }
 
+    public float mass {
+        get { return _mass; }
+        set {
+            _mass = value;
+            if (SomethingHasChanged != null) {
+                SomethingHasChanged();
+            }
+        }
+    }
+
+    public float airDensity {
+        get { return _airDensity; }
+        set {
+            _airDensity = value;
+            if (SomethingHasChanged != null) {
+                SomethingHasChanged();
+            }
+        }
+    }
+
+    public float dragCoefficient {
+        get { return _dragCoefficient; }
+        set {
+            _dragCoefficient = value;
+            if (SomethingHasChanged != null) {
+                SomethingHasChanged();
+            }
+        }
+    }
+
+    public float crossSectionalArea {
+        get { return _crossSectionalArea; }
+        set {
+            _crossSectionalArea = value;
+            if (SomethingHasChanged != null) {
+                SomethingHasChanged();
+            }
+        }
+    }
+
+    private bool _isAirDrag;
+    private float _xPos;
+    private float _yPos;
+    private float _zPos;
+    private VelocityVector _velocityVector;
+    private float _gravityAcceleration;
+    private float _time;
+    private float _deltaTime;
+    private float _maxY;
+    private float _maxYTime;
+    private float _mass;
+    private float _airDensity;
+    private float _dragCoefficient;
+    private float _crossSectionalArea;
+
     public ProjectileMotionData() {
         xPos = 0.0f;
         yPos = 0.0f;
@@ -100,24 +165,14 @@ public class ProjectileMotionData {
         deltaTime = Time.fixedDeltaTime;
         maxY = 0.0f;
         maxYTime = 0.0f;
-
+        isAirDrag = false;
+        mass = 1.0f;
+        airDensity = 1.225f;
+        dragCoefficient = 0.5f;
+        crossSectionalArea = 0.0314f;
+        
         velocityVector.SomethingHasChanged += NotifyAboutVelocityVectorChange;
     }
-
-    ~ProjectileMotionData() {
-        velocityVector.SomethingHasChanged -= NotifyAboutVelocityVectorChange;
-    }
-
-    private float _xPos;
-    private float _yPos;
-    private float _zPos;
-    private VelocityVector _velocityVector;
-    private float _gravityAcceleration;
-    private float _time;
-    private float _deltaTime;
-    private float _maxY;
-    private float _maxYTime;
-
 
     public ProjectileMotionData(ProjectileMotionData other) {
         xPos = other.xPos;
@@ -129,6 +184,15 @@ public class ProjectileMotionData {
         deltaTime = other.deltaTime;
         maxY = other.maxY;
         maxYTime = other.maxYTime;
+        isAirDrag = other.isAirDrag;
+        mass = other.mass;
+        airDensity = other.airDensity;
+        dragCoefficient = other.dragCoefficient;
+        crossSectionalArea = other.crossSectionalArea;
+    }
+
+    ~ProjectileMotionData() {
+        velocityVector.SomethingHasChanged -= NotifyAboutVelocityVectorChange;
     }
 
     private void NotifyAboutVelocityVectorChange() {

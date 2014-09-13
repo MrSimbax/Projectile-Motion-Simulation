@@ -85,10 +85,19 @@ public class SimulationController : MonoBehaviour {
         }
     }
 
+    public void SwitchIsAirDrag() {
+        initData.isAirDrag = !initData.isAirDrag;
+    }
+
     public void SetDefaultSettings() {
         initData.yPos = 10.0f;
         initData.gravityAcceleration = 9.81f;
         initData.velocityVector.SetVector(50.0f , 45.0f);
+        initData.isAirDrag = false;
+        initData.mass = 1.0f;
+        initData.airDensity = 1.225f;
+        initData.dragCoefficient = 0.5f;
+        initData.crossSectionalArea = 0.0314f;
         Reset();
     }
 
@@ -139,7 +148,6 @@ public class SimulationController : MonoBehaviour {
                                                   initData.zPos);
         ballBaseController.height = initData.yPos;
         catapultController.JustReset();
-        // vectors
 
         projectileMotion = null;
         currentData = initData;
