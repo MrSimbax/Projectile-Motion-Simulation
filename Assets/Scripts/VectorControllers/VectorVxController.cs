@@ -1,4 +1,4 @@
-﻿/*using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class VectorVxController : VectorController {
@@ -9,7 +9,7 @@ public class VectorVxController : VectorController {
     //
     
     public override void transformVector() {
-        float vx = projectileMotion.velocityVector.horizontal;
+        float vx = simulationController.currentData.velocityVector.horizontal;
         transform.localScale = new Vector3(0.75f, vx * scale, 0.75f);
         transform.localPosition = new Vector3(transform.localScale.y, 0.0f, 0.0f);
         if (vx < 0.0f) {
@@ -20,4 +20,3 @@ public class VectorVxController : VectorController {
         cone.transform.localPosition = new Vector3(transform.localPosition.x * 2.0f, 0.0f, 0.0f);
     }
 }
-*/

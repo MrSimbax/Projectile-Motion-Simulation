@@ -1,4 +1,4 @@
-﻿/*using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public abstract class VectorController : MonoBehaviour {
@@ -8,7 +8,7 @@ public abstract class VectorController : MonoBehaviour {
 	// Should be put on the cylinder with cone on the top
 	//
 	
-	public ProjectileMotion projectileMotion;
+	public SimulationController simulationController;
 	public GameObject cone;
 	public float scale = 1.0f;
 	
@@ -16,12 +16,16 @@ public abstract class VectorController : MonoBehaviour {
 		get { return _isShowed; }
 		set { _isShowed = value; }
 	}
+
+    public void SwitchIsShowed() {
+        _isShowed = !_isShowed;
+    }
 	
 	private bool _isShowed;
 	
 	public void Update () {
 		
-		if (!_isShowed || Utilities.isZero(projectileMotion.velocityVector.magnitude)) {
+		if (!_isShowed || Utilities.isZero(simulationController.currentData.velocityVector.magnitude)) {
 			renderer.enabled = false;
 			cone.renderer.enabled = false;
 		} else {
@@ -33,4 +37,4 @@ public abstract class VectorController : MonoBehaviour {
 	}
 
 	public abstract void transformVector();
-}*/
+}

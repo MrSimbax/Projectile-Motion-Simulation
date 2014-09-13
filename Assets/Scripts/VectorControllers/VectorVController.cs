@@ -1,4 +1,4 @@
-﻿/*using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class VectorVController : VectorController {
@@ -9,10 +9,10 @@ public class VectorVController : VectorController {
     //
     
     public override void transformVector() {
-        float v = projectileMotion.velocityVector.magnitude;
-        float vx = projectileMotion.velocityVector.horizontal;
-        float vy = projectileMotion.velocityVector.vertical;
-        float angle = projectileMotion.velocityVector.angle;
+        float v = simulationController.currentData.velocityVector.magnitude;
+        float vx = simulationController.currentData.velocityVector.horizontal;
+        float vy = simulationController.currentData.velocityVector.vertical;
+        float angle = simulationController.currentData.velocityVector.angle;
         transform.localScale = new Vector3(0.75f, v * scale, 0.75f);
         transform.localPosition = new Vector3(vx * scale, vy * scale, 0.0f);
         transform.localEulerAngles = new Vector3(0.0f, 0.0f, -90.0f + angle);
@@ -21,4 +21,3 @@ public class VectorVController : VectorController {
                                                 transform.localPosition.y * 2.0f, 0.0f);
     }
 }
-*/
