@@ -85,7 +85,7 @@ public class SimulationController : MonoBehaviour {
         }
     }
 
-    public void SwitchIsAirDrag() {
+    public void SwitchIsAirDrag(bool b) {
         initData.isAirDrag = !initData.isAirDrag;
     }
 

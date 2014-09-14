@@ -35,6 +35,7 @@ public class SettingsManager : MonoBehaviour {
         SimulationController.OnSimulationStart += DisableAllInputs;
         SimulationController.OnSimulationReset += EnableAllInputs;
         SimulationController.OnSimulationReset += UpdateInputs;
+        airDragToggle.onValueChanged.AddListener(simulationController.SwitchIsAirDrag);
         airDragToggle.onValueChanged.AddListener(SwitchAirDrag);
     }
 
@@ -43,11 +44,12 @@ public class SettingsManager : MonoBehaviour {
         SimulationController.OnSimulationStart -= DisableAllInputs;
         SimulationController.OnSimulationReset -= EnableAllInputs;
         SimulationController.OnSimulationReset -= UpdateInputs;
+        airDragToggle.onValueChanged.RemoveListener(simulationController.SwitchIsAirDrag);
         airDragToggle.onValueChanged.RemoveListener(SwitchAirDrag);
     }
 
     public void SetAirDragInputsInteractivity() {
-        if (airDragToggle.isOn) {
+        if (airDragToggle.isOn && airDragToggle.IsInteractable()) {
             EnableAirDragInputs();
         } else {
             DisableAirDragInputs();
@@ -68,6 +70,14 @@ public class SettingsManager : MonoBehaviour {
         angleInput.value = Utilities.Round(data.velocityVector.angle);
         heightInput.value = Utilities.Round(data.yPos);
         gravityAccInput.value = Utilities.Round(data.gravityAcceleration);
+
+        airDragToggle.onValueChanged.RemoveListener(simulationController.SwitchIsAirDrag);
+        airDragToggle.onValueChanged.RemoveListener(SwitchAirDrag);
+        airDragToggle.isOn = data.isAirDrag;
+        airDragToggle.onValueChanged.AddListener(simulationController.SwitchIsAirDrag);
+        airDragToggle.onValueChanged.AddListener(SwitchAirDrag);
+        //Debug.Log (airDragToggle.isOn);
+
         massInput.value = Utilities.Round(data.mass);
         airDensityInput.value = Utilities.Round(data.airDensity);
         dragCoefficientInput.value = Utilities.Round(data.dragCoefficient);

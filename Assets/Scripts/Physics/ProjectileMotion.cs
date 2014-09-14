@@ -35,8 +35,8 @@ public class ProjectileMotion {
         if (data.isAirDrag) {
             float airDragForce = 0.0f;
             airDragForce = CalculateAirDragForce(data.velocityVector.horizontal);
-            Debug.Log (data.mass);
-            Debug.Log (airDragForce);
+            //Debug.Log (data.mass);
+            //Debug.Log (airDragForce);
             deltaHorizontalVelocity = - (airDragForce / data.mass) * data.deltaTime;
             airDragForce = CalculateAirDragForce(data.velocityVector.vertical);
             deltaVerticalVelocity = - (data.gravityAcceleration + (airDragForce / data.mass)) * data.deltaTime;
