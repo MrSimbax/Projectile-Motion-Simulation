@@ -26,7 +26,7 @@ public class ProjectileMotion {
 
     private float CalculateAirDragForce(float velocity) {
         return 0.5f * data.airDensity * data.crossSectionalArea * data.dragCoefficient *
-            Mathf.Pow(velocity, 2.0f);
+            Mathf.Pow(velocity, 2.0f) * (velocity >= 0.0f ? 1.0f : -1.0f);
     }
 
     private void CalculateVelocity() {
