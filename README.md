@@ -11,4 +11,4 @@ Install Unity3D editor and open the project (just select the root folder of all 
 Screenshot
 =====================
 
-<img src=http://puu.sh/77r3C>
+<img src=http://i.imgur.com/LhX6e3U.png>
